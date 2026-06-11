@@ -1,0 +1,6 @@
+{
+  "name": "琥珀與花影 Amber & Petal Shadows",
+  "description": "FF14 RP 創作者交流空間「琥珀與花影」官方網站。結合現代植物書頁與精緻編輯雜誌美學，提供沉浸式推門入室、小屋絮語、菜單與雅事、執筆者專訪及手風琴問答體驗。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
