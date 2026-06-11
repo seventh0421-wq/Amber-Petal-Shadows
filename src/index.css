@@ -1,7 +1,4 @@
-@import url('https://v1.emfont.com/client?id=GenWanMinTW');
-@import url('https://v1.emfont.com/client?id=MaokenXiangCuiKeSong');
-@import url('https://v1.emfont.com/client?id=GenRyuMinTW');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=New+Tegomin&family=Meddon&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@300;400;500;700&family=New+Tegomin&family=Meddon&display=swap');
 @import "tailwindcss";
 
 @theme {

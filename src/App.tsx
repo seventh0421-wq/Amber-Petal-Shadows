@@ -24,7 +24,9 @@ import {
   ExternalLink,
   ChevronRight,
   ChevronLeft,
-  Maximize2
+  Maximize2,
+  Sprout,
+  Users
 } from 'lucide-react';
 
 import { 
@@ -69,7 +71,13 @@ const LeafBranch = () => (
 );
 
 export default function App() {
-  const [entered, setEntered] = useState<boolean>(false);
+  const [entered, setEntered] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('hasSeenIntro') === 'true';
+    } catch (e) {
+      return false;
+    }
+  });
 
   const [activeTab, setActiveTab] = useState<'home' | 'services' | 'staff' | 'qa'>('home');
   const [hoveredTab, setHoveredTab] = useState<'home' | 'services' | 'staff' | 'qa' | null>(null);
@@ -137,6 +145,9 @@ export default function App() {
   };
 
   const handleEnter = () => {
+    try {
+      sessionStorage.setItem('hasSeenIntro', 'true');
+    } catch (e) {}
     setEntered(true);
   };
 
@@ -648,8 +659,9 @@ export default function App() {
                       {/* Asymmetric Two Column Text Layout */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left text-gray-600 text-sm leading-8 font-light">
                         <div className="space-y-6">
-                          <h4 className="font-serif text-gray-800 text-base font-semibold tracking-wider pb-2 border-b border-gray-100">
-                            🌱 社群引流與原創扶持
+                          <h4 className="font-serif text-gray-800 text-base font-semibold tracking-wider pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <Sprout size={18} className="text-[#C29355]" />
+                            <span>社群引流與原創扶持</span>
                           </h4>
                           <p className="text-justify">
                             善用 FF14 社群的互動性，以同人創作帶動曝光，進而反哺創作者的原創作品，協助提升原創作品的能見度。
@@ -657,8 +669,9 @@ export default function App() {
                         </div>
                         
                         <div className="space-y-6">
-                          <h4 className="font-serif text-gray-800 text-base font-semibold tracking-wider pb-2 border-b border-gray-100">
-                            🪑 角色放置與交流空間
+                          <h4 className="font-serif text-gray-800 text-base font-semibold tracking-wider pb-2 border-b border-gray-100 flex items-center gap-2">
+                            <Users size={18} className="text-[#C29355]" />
+                            <span>角色放置與交流空間</span>
                           </h4>
                           <p className="text-justify">
                             建立一個兼具「角色掛網放置」與「創作者交流」的友善空間，提供社群夥伴能夠舒適聚會、安放靈感的棲所。
@@ -1217,9 +1230,8 @@ export default function App() {
             </div>
 
             {/* Absolute bottom minimal copyright */}
-            <div className="max-w-7xl mx-auto px-6 pt-12 mt-12 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center text-[10px] font-mono tracking-widest text-gray-400">
+            <div className="max-w-7xl mx-auto px-6 pt-12 mt-12 border-t border-gray-100 flex justify-center items-center text-[10px] font-mono tracking-widest text-gray-400 text-center">
               <span>DESIGNED FOR COLLECTIVE HEARTS AND EMBLAZONED PETALS.</span>
-              <span className="mt-2 sm:mt-0 uppercase">MADE WITH CRAFT IN CLOUD WORKSPACE</span>
             </div>
           </footer>
 
