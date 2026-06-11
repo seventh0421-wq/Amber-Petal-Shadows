@@ -26,7 +26,13 @@ import {
   ChevronLeft,
   Maximize2,
   Sprout,
-  Users
+  Users,
+  CakeSlice,
+  Cookie,
+  Dumbbell,
+  Moon,
+  Snowflake,
+  Utensils
 } from 'lucide-react';
 
 import { 
@@ -39,6 +45,10 @@ import {
   MenuItem,
   StaffProfile
 } from './data';
+
+import { ArtistProfileCard, DEMO_ARTISTS } from './components/ArtistProfileCard';
+import { StaffProfileSwitcher, ArtistProfile as SwitchedArtistProfile } from './components/StaffProfileSwitcher';
+import { WaiterProfileSwitcher } from './components/WaiterProfileSwitcher';
 
 // Custom Botanical Lineart SVG Separator 
 const BotanicalDivider = () => (
@@ -70,6 +80,44 @@ const LeafBranch = () => (
   </div>
 );
 
+const getMenuItemIcon = (iconName?: string) => {
+  switch (iconName) {
+    case 'Coffee':
+      return <Coffee className="w-5 h-5 text-[#C29355]" />;
+    case 'CakeSlice':
+      return <CakeSlice className="w-5 h-5 text-[#C29355]" />;
+    case 'Cookie':
+      return <Cookie className="w-5 h-5 text-[#C29355]" />;
+    case 'Dumbbell':
+      return <Dumbbell className="w-5 h-5 text-[#C29355]" />;
+    case 'Moon':
+      return <Moon className="w-5 h-5 text-[#C29355]" />;
+    case 'Snowflake':
+      return <Snowflake className="w-5 h-5 text-[#C29355]" />;
+    default:
+      return <Coffee className="w-5 h-5 text-[#C29355]" />;
+  }
+};
+
+const getPhotoIcon = (iconKey: string, className = "w-3.5 h-3.5 text-[#C29355]") => {
+  switch (iconKey) {
+    case 'Sprout':
+      return <Sprout className={className} />;
+    case 'Coffee':
+      return <Coffee className={className} />;
+    case 'Compass':
+      return <Compass className={className} />;
+    case 'BookOpen':
+      return <BookOpen className={className} />;
+    case 'Feather':
+      return <Feather className={className} />;
+    case 'Sparkles':
+      return <Sparkles className={className} />;
+    default:
+      return null;
+  }
+};
+
 export default function App() {
   const [entered, setEntered] = useState<boolean>(() => {
     try {
@@ -81,7 +129,7 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<'home' | 'services' | 'staff' | 'qa'>('home');
   const [hoveredTab, setHoveredTab] = useState<'home' | 'services' | 'staff' | 'qa' | null>(null);
-  const [menuFilter, setMenuFilter] = useState<'all' | 'tea' | 'confection' | 'elixir'>('all');
+  const [menuFilter, setMenuFilter] = useState<'all' | 'tea_delight' | 'conceptual_set'>('all');
   const [staffRole, setStaffRole] = useState<'scribe' | 'lantern'>('scribe');
   const [openFaq, setOpenFaq] = useState<string | null>('f1'); // default open server location FAQ
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -429,7 +477,7 @@ export default function App() {
           </header>
 
           {/* PAGE ROUTING ENVELOPE */}
-          <main className="flex-grow max-w-7xl mx-auto w-full px-6 py-8 md:py-16">
+          <main className={`flex-grow w-full mx-auto px-6 py-8 md:py-16 transition-all duration-300 ${activeTab === 'staff' ? 'max-w-[1560px]' : 'max-w-7xl'}`}>
             <AnimatePresence mode="wait">
               {activeTab === 'home' && (
                 <motion.div
@@ -709,63 +757,79 @@ export default function App() {
                       <h2 className="font-serif text-3xl text-gray-900 tracking-widest font-normal">
                         雅選與今日茶譜
                       </h2>
-                      <p className="text-gray-500 text-xs tracking-wider leading-relaxed font-light">
-                        小屋精選黑衣森林山泉，配合各地風乾草藥沏成。無任何繁複裝飾邊框，純粹依靠天然溫度與草本香氣傳達林間靈性。
-                      </p>
                     </div>
 
-                    {/* Filter buttons - pure typography elegance */}
+                     {/* Filter buttons - pure typography elegance */}
                     <div className="flex flex-wrap justify-center gap-6 md:gap-12 pb-4 border-b border-gray-100 max-w-2xl mx-auto">
                       {[
-                        { id: 'all', label: '全部茶點 (All)' },
-                        { id: 'tea', label: '天然花草茶 (Infused Tea)' },
-                        { id: 'confection', label: '花影和菓子 (Confections)' },
-                        { id: 'elixir', label: '解憂藥劑 (Elixirs)' }
+                        { id: 'all', label: '全部 (All)', icon: null },
+                        { id: 'tea_delight', label: '微光茶點 (Teatime - 20k)', icon: <Sparkles className="w-4 h-4 text-[#C29355]" /> },
+                        { id: 'conceptual_set', label: '概念套餐 (Course - 50k)', icon: <Utensils className="w-4 h-4 text-[#C29355]" /> }
                       ].map((filter) => (
                         <button
                           key={filter.id}
                           onClick={() => setMenuFilter(filter.id as any)}
-                          className={`font-serif text-xs md:text-sm tracking-widest transition-all cursor-pointer ${
+                          className={`font-serif text-xs md:text-sm tracking-widest transition-all cursor-pointer flex items-center space-x-2 pb-2 ${
                             menuFilter === filter.id 
-                              ? 'text-[#C29355] font-bold underline underline-offset-8 decoration-1' 
+                              ? 'text-[#C29355] font-bold border-b-2 border-[#C29355]' 
                               : 'text-gray-400 hover:text-gray-800'
                           }`}
                         >
-                          {filter.label}
+                          {filter.icon}
+                          <span>{filter.label}</span>
                         </button>
                       ))}
                     </div>
 
-                    {/* Menu grid: Frameless, only typography sizing & negative spacing, no columns dividers */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 max-w-5xl mx-auto">
+                    {/* Menu grid: Elegant block-cards with layout structure representing menus */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                       {MENU_ITEMS.filter(item => menuFilter === 'all' || item.category === menuFilter).map((item) => (
                         <div 
                           key={item.id} 
-                          className="flex flex-col space-y-2 hover:bg-gray-50/40 p-4 transition-all duration-300"
+                          className="flex flex-col space-y-4 bg-[#FCF8F2] border border-amber-900/10 hover:border-amber-900/20 shadow-sm p-6 transition-all duration-300 rounded-none relative overflow-hidden"
                         >
-                          <div className="flex justify-between items-baseline">
-                            <div className="flex flex-col">
-                              <h3 className="font-serif text-base text-gray-900 font-medium tracking-wide">
-                                {item.name}
-                              </h3>
-                              <span className="font-serif italic text-[11px] text-gray-400">
-                                {item.englishName}
-                              </span>
+                          {/* Top bar */}
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-start space-x-3">
+                              <div className="mt-0.5">{getMenuItemIcon(item.icon)}</div>
+                              <div className="flex flex-col">
+                                <h3 className="font-serif text-base md:text-[17px] text-gray-900 font-medium tracking-wide">
+                                  {item.name}
+                                </h3>
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+                                  <span className="font-serif italic text-[11px] text-gray-400">
+                                    {item.englishName}
+                                  </span>
+                                  {item.gameItemName && (
+                                    <span className="text-[10px] text-[#C29355] bg-[#F4EFE6] px-1.5 py-0.5 font-light">
+                                      遊戲內：{item.gameItemName}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                            <span className="font-mono text-xs text-[#C29355] font-medium tracking-widest">
+                            <span className="font-mono text-xs text-[#C29355] font-semibold tracking-widest pl-2 whitespace-nowrap">
                               {item.price}
                             </span>
                           </div>
                           
-                          <p className="text-gray-500 text-[12px] leading-relaxed pt-1 font-light text-justify">
+                          <p className="text-gray-600 text-[12.5px] leading-relaxed pt-1 font-light text-justify">
                             {item.desc}
                           </p>
                           
-                          <div className="flex items-center space-x-1.5 pt-1">
-                            <span className="w-1 h-1 rounded-full bg-emerald-900/40" />
-                            <span className="font-mono text-[9px] text-emerald-900/60 uppercase tracking-widest">
-                              {item.category === 'tea' ? 'Botanical Infusion' : item.category === 'confection' ? 'Artisanal Confection' : 'Apothecary Soda'}
-                            </span>
+                          {/* Footer label with custom category tag */}
+                          <div className="flex items-center justify-between pt-1 mt-auto">
+                            <div className="flex items-center space-x-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#C29355]" />
+                              <span className="font-mono text-[9px] text-[#C29355] uppercase tracking-widest">
+                                {item.category === 'tea_delight' ? 'Shimmering Delight / 微光茶點' : 'Conceptual Set / 概念套餐'}
+                              </span>
+                            </div>
+                            {item.category === 'conceptual_set' && (
+                              <span className="text-[9px] font-sans text-emerald-800 font-light bg-emerald-50 border border-emerald-100 px-1.5 py-0.5">
+                                * 可要求 僅登記累積消費，不要餐
+                              </span>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -773,124 +837,224 @@ export default function App() {
                   </section>
 
 
-                  {/* Part 2: 小屋紀事 (Minimalist Vertical Timeline of chronicles) */}
-                  <section id="chronology-section" className="py-12 bg-[#FDFAF6] max-w-4xl mx-auto">
+                  {/* Part 2: 小屋紀事 (Minimalist space for chronicles and activity) */}
+                  <section id="chronology-section" className="py-12 bg-[#FDFAF6] max-w-4xl mx-auto px-4">
                     
-                    <div className="text-center mb-16 space-y-4">
-                      <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355]">
-                        CHRONOLOGY
+                    <div className="text-center mb-10 space-y-3">
+                      <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355] block">
+                        CHRONOLOGY / 小屋紀事 ・ 琥珀活動
                       </span>
                       <h2 className="font-serif text-2xl text-gray-900 tracking-widest font-normal">
-                        小屋紀事 ・ 歲月年輪
+                        微光林間「每月速寫夜」
                       </h2>
                     </div>
 
-                    {/* Timeline Line */}
-                    <div className="relative pl-6 md:pl-0 border-l border-gray-100 md:border-l-0 md:before:absolute md:before:left-1/2 md:before:top-0 md:before:bottom-0 md:before:w-[1px] md:before:bg-gray-200">
+                    {/* 活動企劃卡片 (日系雜誌精緻細邊框) */}
+                    <div className="border border-[#0B2415]/15 bg-white p-6 md:p-8 space-y-8 shadow-[0_4px_20px_rgba(11,36,21,0.01)] text-left rounded-none">
                       
-                      {CHRONICLE_ITEMS.map((chr, index) => {
-                        const isEven = index % 2 === 0;
-                        return (
-                          <div 
-                            key={chr.id} 
-                            className={`relative md:mb-16 mb-12 flex flex-col md:flex-row items-start ${
-                              isEven ? 'md:flex-row-reverse' : ''
-                            }`}
-                          >
-                            {/* Dot indicator on Timeline */}
-                            <div className="absolute left-[-29px] top-1 md:left-1/2 md:translate-x-[-3.5px] w-[8px] h-[8px] rounded-full bg-[#C29355] ring-4 ring-[#FDFAF6]" />
-
-                            {/* Column box */}
-                            <div className={`w-full md:w-[45%] ${
-                              isEven ? 'md:pl-10 text-left' : 'md:pr-10 md:text-right'
-                            }`}>
-                              
-                              <span className="font-mono text-xs text-[#C29355] font-semibold tracking-widest block uppercase">
-                                {chr.chapter} — {chr.date}
-                              </span>
-                              
-                              <h3 className="font-serif text-lg text-gray-900 font-medium tracking-wide mt-2">
-                                {chr.title}
-                              </h3>
-                              
-                              <p className={`text-gray-500 text-xs leading-relaxed mt-3 font-light text-justify max-w-md ${
-                                isEven ? 'mr-auto' : 'md:ml-auto ml-0'
-                              }`}>
-                                {chr.desc}
-                              </p>
-                              
-                            </div>
-
-                            {/* Spacing alignment helper */}
-                            <div className="hidden md:block w-[10%]" />
-                            <div className="hidden md:block w-[45%]" />
+                      {/* 上側：企劃資訊 */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-[#0B2415]/10">
+                        {/* 人員配置 */}
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2 text-[#C29355]">
+                            <Users size={16} />
+                            <span className="font-mono text-xs uppercase tracking-[0.2em] font-semibold">
+                              CO-STAFF / 人員配置
+                            </span>
                           </div>
-                        );
-                      })}
+                          <div className="space-y-2 pl-6">
+                            <p className="font-serif text-[13.5px] text-gray-700 tracking-wider">
+                              <span className="text-gray-400 mr-2 font-mono text-xs">// 模特人選</span>
+                              蹲、茉、泉蓮、時羽
+                            </p>
+                            <p className="font-serif text-[13.5px] text-gray-700 tracking-wider">
+                              <span className="text-gray-400 mr-2 font-mono text-xs">// 主持人 / 計時員</span>
+                              <span className="italic text-gray-300">本期留空</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* 酬勞與時長 */}
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2 text-[#C29355]">
+                            <Sparkles size={16} />
+                            <span className="font-mono text-xs uppercase tracking-[0.2em] font-semibold">
+                              PAY & TIME / 酬勞與時長
+                            </span>
+                          </div>
+                          <div className="space-y-2 pl-6">
+                            <p className="font-serif text-[13.5px] text-gray-700 tracking-wider">
+                              <span className="text-gray-400 mr-2 font-mono text-xs">// 模特薪資</span>
+                              時薪 50,000 Gil
+                            </p>
+                            <p className="font-serif text-[13.5px] text-gray-700 tracking-wider">
+                              <span className="text-gray-400 mr-2 font-mono text-xs">// 活動總長</span>
+                              約 120 分鐘
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 下側：流程表 */}
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2 text-[#C29355]">
+                          <BookOpen size={16} />
+                          <span className="font-mono text-xs uppercase tracking-[0.2em] font-semibold">
+                            SCHEDULE / 流程表
+                          </span>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse border-y-2 border-[#0B2415] text-left">
+                            <thead>
+                              <tr className="border-b border-[#0B2415] bg-[#0B2415]/5">
+                                <th className="py-3 px-4 font-serif text-sm font-semibold text-[#0B2415] tracking-wider w-[120px] border-r border-[#0B2415]/10">時間分配</th>
+                                <th className="py-3 px-4 font-serif text-sm font-semibold text-[#0B2415] tracking-wider w-[180px] border-r border-[#0B2415]/10">階段任務</th>
+                                <th className="py-3 px-4 font-serif text-sm font-semibold text-[#0B2415] tracking-wider">模特動作與規則</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#0B2415]/10 text-gray-700 font-serif text-[13px] leading-relaxed">
+                              <tr>
+                                <td className="py-4 px-4 font-mono font-medium text-xs text-[#C29355] border-r border-[#0B2415]/10">10 min</td>
+                                <td className="py-4 px-4 font-medium border-r border-[#0B2415]/10">迎賓與開場</td>
+                                <td className="py-4 px-4 text-gray-600 font-light">主持人說明今日主題，模特至舞台中央就位。</td>
+                              </tr>
+                              <tr>
+                                <td className="py-4 px-4 font-mono font-medium text-xs text-[#C29355] border-r border-[#0B2415]/10">15 - 35 min</td>
+                                <td className="py-4 px-4 font-medium border-r border-[#0B2415]/10">第一階段 (動作：站姿)</td>
+                                <td className="py-4 px-4 text-gray-600 font-light">繪師拍照留存並開始 20 分鐘速寫。</td>
+                              </tr>
+                              <tr>
+                                <td className="py-4 px-4 font-mono font-medium text-xs text-[#C29355] border-r border-[#0B2415]/10">40 - 60 min</td>
+                                <td className="py-4 px-4 font-medium border-r border-[#0B2415]/10">第二階段 (動作2)</td>
+                                <td className="py-4 px-4 text-gray-600 font-light">
+                                  <span className="block font-medium mb-1">動作二</span>
+                                  <span className="text-gray-500 font-light">模特動作+表情，繪師拍照留存並開始 20 分鐘速寫。</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="py-4 px-4 font-mono font-medium text-xs text-[#C29355] border-r border-[#0B2415]/10">65 - 85 min</td>
+                                <td className="py-4 px-4 font-medium border-r border-[#0B2415]/10">第三階段 (動作3)</td>
+                                <td className="py-4 px-4 text-gray-600 font-light">
+                                  <span className="block font-medium mb-1">動作三</span>
+                                  <span className="text-gray-500 font-light">模特動作+表情，繪師拍照留存並開始 20 分鐘速寫。</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="py-4 px-4 font-mono font-medium text-xs text-[#C29355] border-r border-[#0B2415]/10">85 - 120 min</td>
+                                <td className="py-4 px-4 font-medium border-r border-[#0B2415]/10">大合照與成果發表</td>
+                                <td className="py-4 px-4 text-gray-600 font-light space-y-1">
+                                  <p className="font-light">・ 繪師將作品上傳至 Discord</p>
+                                  <p className="font-light">・ 攝影師安排大合照、交流放鬆時間。</p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
 
                     </div>
                   </section>
 
 
-                  {/* Part 3: 琥珀切片與眾人花影 (Polaroid Masonry block) */}
-                  <section id="gallery-section" className="space-y-12">
+                  {/* Part 3: 琥珀切片 (Polaroid Wall) */}
+                  <section id="amber-slices-section" className="space-y-12 pt-12 border-t border-gray-100/60">
                     
                     <div className="text-center space-y-4 max-w-md mx-auto">
                       <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355]">
-                        MEMORIES IN AMBER
+                        AMBER SLICES
                       </span>
                       <h2 className="font-serif text-2xl text-gray-900 tracking-widest font-normal">
-                        琥珀切片與眾人花影
+                        琥珀切片
                       </h2>
-                      <p className="text-gray-500 text-xs tracking-wider font-light">
-                        旅人在此留下的點滴光影。帶有優雅手寫感的拍立得風格與寬幅無邊框照片交錯。
-                      </p>
                     </div>
 
-                    {/* Masonry layout container */}
-                    <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8 max-w-6xl mx-auto py-8">
-                      {PETAL_PHOTOS.map((photo, index) => {
-                        const isPolaroid = photo.type === 'polaroid';
+                    {/* Polaroid Grid Layout */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto py-8">
+                      {PETAL_PHOTOS.filter(photo => photo.type === 'polaroid').map((photo, index) => {
+                        const angles = ['rotate-[-1.5deg]', 'rotate-[1deg]', 'rotate-[-1deg]', 'rotate-[1.5deg]'];
+                        const angle = angles[index % angles.length];
                         return (
                           <motion.div
-                            key={index}
+                            key={'slice-' + index}
                             onClick={() => setSelectedPhoto(photo)}
-                            whileHover={{ y: -6, scale: 1.02 }}
+                            whileHover={{ y: -8, scale: 1.03, rotate: 0 }}
                             transition={{ duration: 0.4 }}
-                            className={`break-inside-avoid cursor-pointer overflow-hidden relative group inline-block w-full text-left bg-white ${
-                              isPolaroid 
-                                ? 'p-4 pb-8 border border-gray-100 rounded-none shadow-sm rotate-[-1deg] hover:rotate-0 hover:shadow-md hover:z-20' 
-                                : 'rounded-none hover:shadow-lg'
-                            }`}
+                            className={`cursor-pointer overflow-hidden relative group bg-white p-4 pb-8 border border-gray-150 rounded-none shadow-sm hover:shadow-md hover:z-20 inline-block w-full text-left transition-all ${angle}`}
                           >
                             {/* Image wrapper */}
-                            <div className={`overflow-hidden bg-gray-50 aspect-auto ${isPolaroid ? 'mb-4 border border-gray-50' : 'aspect-[3/2]'}`}>
+                            <div className="overflow-hidden bg-[#FBF8F3] aspect-[4/5] relative">
                               <img 
                                 src={photo.url} 
                                 alt={photo.caption} 
                                 referrerPolicy="no-referrer"
-                                className="w-full h-full object-cover group-hover:scale-105 duration-700 ease-out"
+                                className="w-full h-full object-cover filter saturate-[0.9] hover:saturate-100 transition-all duration-700 ease-out"
                               />
                             </div>
 
                             {/* Caption formatting */}
-                            {isPolaroid ? (
-                              <p className="text-gray-500 font-serif text-[12px] italic tracking-wide text-center pt-2 leading-relaxed font-normal">
+                            <div className="flex items-center justify-center space-x-1.5 pt-4">
+                              {photo.iconKey && getPhotoIcon(photo.iconKey)}
+                              <p className="text-gray-600 font-serif text-[11.5px] italic tracking-wide text-center leading-normal font-normal">
                                 {photo.caption}
                               </p>
-                            ) : (
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-end p-6">
-                                <p className="text-white font-serif text-sm tracking-widest">
-                                  {photo.caption}
-                                </p>
-                                <span className="text-white/50 text-[10px] font-mono tracking-widest uppercase mt-1">
-                                  [ EXQUISITE FULL SCREEN VIEWS ]
-                                </span>
-                              </div>
-                            )}
+                            </div>
 
                             {/* Magnifier indicator on hover */}
                             <div className="absolute top-4 right-4 bg-white/90 p-1.5 opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300 pointer-events-none text-emerald-950">
+                              <Maximize2 size={12} />
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                  </section>
+
+
+                  {/* Part 4: 眾人花影 (Photos block) */}
+                  <section id="flowers-crowd-section" className="space-y-12 pt-16 border-t border-gray-100/60 transition-all">
+                    
+                    <div className="text-center space-y-4 max-w-md mx-auto">
+                      <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355]">
+                        FLOWERS OF THE CROWD
+                      </span>
+                      <h2 className="font-serif text-2xl text-gray-900 tracking-widest font-normal">
+                        眾人花影
+                      </h2>
+                    </div>
+
+                    {/* Frameless Photos Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto py-8">
+                      {PETAL_PHOTOS.filter(photo => photo.type === 'full').map((photo, index) => {
+                        return (
+                          <motion.div
+                            key={'photo-' + index}
+                            onClick={() => setSelectedPhoto(photo)}
+                            whileHover={{ y: -4, scale: 1.015 }}
+                            transition={{ duration: 0.4 }}
+                            className="relative group overflow-hidden cursor-pointer shadow-sm hover:shadow-lg rounded-none aspect-[3/2] bg-gray-50 transition-all"
+                          >
+                            <img 
+                              src={photo.url} 
+                              alt={photo.caption} 
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover group-hover:scale-105 duration-700 ease-out"
+                            />
+
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-90 md:opacity-0 group-hover:opacity-100 transition-all duration-400 flex flex-col justify-end p-6 select-none">
+                              <div className="flex items-center space-x-2">
+                                {photo.iconKey && getPhotoIcon(photo.iconKey, "w-4 h-4 text-white/90")}
+                                <p className="text-white font-serif text-sm tracking-widest font-medium">
+                                  {photo.caption}
+                                </p>
+                              </div>
+                              <span className="text-white/40 text-[9px] font-mono tracking-widest uppercase mt-1.5 block">
+                                [ CLICK TO INSPECT DETAIL • 點擊檢視放大 ]
+                              </span>
+                            </div>
+
+                            <div className="absolute top-4 right-4 bg-white/95 p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 text-emerald-950">
                               <Maximize2 size={12} />
                             </div>
                           </motion.div>
@@ -910,7 +1074,7 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
-                  className="space-y-16"
+                  className="space-y-10"
                 >
                   
                   {/* Part 1: Page Header */}
@@ -921,16 +1085,13 @@ export default function App() {
                     <h2 className="font-serif text-3xl text-gray-900 tracking-widest font-normal">
                       屋簷下的人們
                     </h2>
-                    <p className="text-gray-500 text-xs tracking-wider leading-relaxed font-light">
-                      這座花園溫室與草藥茶店，由這群甘願離群索居的創作者共同澆灌。
-                    </p>
                   </div>
 
-                  {/* High elegance switch tabs - 'Scribes' vs 'Lantern Bearers' */}
-                  <div className="flex justify-center max-w-md mx-auto relative border-b border-gray-100 pb-2">
+                  {/* High elegance switch tabs - 'Scribes' and 'Lantern Bearers' */}
+                  <div className="flex justify-center max-w-xl mx-auto relative border-b border-gray-100 pb-2">
                     <button
                       onClick={() => setStaffRole('scribe')}
-                      className={`w-1/2 py-3 text-center font-serif text-sm tracking-widest transition-all relative z-10 cursor-pointer ${
+                      className={`w-1/2 py-3 text-center font-serif text-xs md:text-sm tracking-widest transition-all relative z-10 cursor-pointer ${
                         staffRole === 'scribe' ? 'text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-700'
                       }`}
                     >
@@ -944,7 +1105,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={() => setStaffRole('lantern')}
-                      className={`w-1/2 py-3 text-center font-serif text-sm tracking-widest transition-all relative z-10 cursor-pointer ${
+                      className={`w-1/2 py-3 text-center font-serif text-xs md:text-sm tracking-widest transition-all relative z-10 cursor-pointer ${
                         staffRole === 'lantern' ? 'text-gray-900 font-bold' : 'text-gray-400 hover:text-gray-700'
                       }`}
                     >
@@ -958,119 +1119,336 @@ export default function App() {
                     </button>
                   </div>
 
-                  {/* Part 2: Editorial Magazine-style profile presentation */}
-                  <div className="max-w-5xl mx-auto py-6">
+                  <div className="max-w-none mx-auto py-2">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={staffRole}
-                        initial={{ opacity: 0, x: staffRole === 'scribe' ? -20 : 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: staffRole === 'scribe' ? 20 : -20 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="space-y-24"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -15 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {STAFF_PROFILES.filter(prof => prof.role === staffRole).map((profile) => (
-                          <div 
-                            key={profile.id} 
-                            className="grid grid-cols-12 gap-8 lg:gap-16 items-start py-8 border-b border-gray-100/55 last:border-b-0"
-                          >
-                            
-                            {/* Left Side Column: High-contrast portrait + Metadata (Grid columns 5) */}
-                            <div className="col-span-12 lg:col-span-5 flex flex-col space-y-6">
-                              <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] outline outline-1 outline-gray-200 outline-offset-8">
-                                <img 
-                                  src={profile.avatarUrl} 
-                                  alt={profile.name} 
-                                  referrerPolicy="no-referrer"
-                                  className="w-full h-full object-cover scale-[1.01] hover:scale-103 transition-transform duration-700 filter saturate-90"
-                                />
-                                <div className="absolute bottom-4 left-4 bg-emerald-950 text-[#FDFAF6] text-[10px] font-mono tracking-widest px-4 py-1.5 uppercase">
-                                  {profile.role === 'scribe' ? 'Scribe Division' : 'Watcher Division'}
-                                </div>
-                              </div>
-
-                              {/* Character Metadata Block */}
-                              <div className="space-y-3 pt-6 border-t border-gray-100">
-                                <div className="flex justify-between items-center text-xs">
-                                  <span className="font-mono text-gray-400 uppercase tracking-widest">Job/Aetherial Art</span>
-                                  <span className="font-serif text-gray-800 font-semibold">{profile.title}</span>
-                                </div>
-                                
-                                {profile.astrologySign && (
-                                  <div className="flex justify-between items-center text-xs">
-                                    <span className="font-mono text-gray-400 uppercase tracking-widest">Astrological Sign</span>
-                                    <span className="font-serif text-gray-800">{profile.astrologySign}</span>
-                                  </div>
-                                )}
-
-                                <div className="space-y-2">
-                                  <span className="font-mono text-xs text-gray-400 uppercase tracking-widest block">Specialties / 領域專長</span>
-                                  <div className="flex flex-wrap gap-2 pt-1">
-                                    {profile.specialty.map((spec, sIdx) => (
-                                      <span 
-                                        key={sIdx}
-                                        className="px-2.5 py-1 bg-gray-100 text-gray-700 font-serif text-[11px] tracking-wide rounded-none border border-gray-200"
-                                      >
-                                        🌿 {spec}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Right Side Column: Large Quotes & Interview details (Grid columns 7) */}
-                            <div className="col-span-12 lg:col-span-7 space-y-6 flex flex-col justify-between">
-                              
-                              <div className="space-y-4">
-                                <span className="font-serif text-lg text-gray-400 italic">Biography Spotlight</span>
-                                <h3 className="font-serif text-3xl font-bold tracking-widest text-gray-900">
-                                  {profile.name}
-                                </h3>
-                                <p className="font-serif text-xs tracking-wider text-[#C29355] font-semibold uppercase leading-none">
-                                  {profile.englishName}
-                                </p>
-                              </div>
-
-                              {/* Massive highlight quote block */}
-                              <blockquote className="border-l-2 border-[#C29355] pl-6 py-2 my-4">
-                                <p className="font-serif text-lg md:text-xl text-gray-800 italic leading-relaxed font-light text-justify">
-                                  {profile.quote}
-                                </p>
-                              </blockquote>
-
-                              {/* Detailed narrative paragraph (Renders standard non-tech editorial article style) */}
-                              <div className="space-y-6 pt-2">
-                                <h4 className="font-serif text-sm font-semibold text-gray-900 tracking-wider">
-                                  [ 溫室草本記事與研究訪談 ]
-                                </h4>
-                                <p className="text-gray-600 text-sm leading-8 text-justify font-light">
-                                  {profile.bio}
-                                </p>
-                                <p className="text-gray-500 text-xs italic leading-relaxed pt-2 font-light">
-                                  「他在溫室的暖陽折射下安靜執筆。在琥珀小屋，他希望自己不只是一個侍茶者，更是一個甘願在黑衣森林的落葉裡聽松濤的觀察官。如果有著相同的頻率，他樂意在壁爐側為你翻開久未出版的冒險圖集。」
-                                </p>
-                              </div>
-
-                              {/* Quick interaction button */}
-                              <div className="pt-6">
-                                <button
-                                  onClick={() => setActiveTab('qa')}
-                                  className="inline-flex items-center space-x-2 text-xs font-serif text-gray-900 border-b border-gray-900/40 hover:border-gray-900 pb-1 cursor-pointer tracking-wider"
-                                >
-                                  <span>查詢營業時間與地址，與他造訪對話</span>
-                                  <ChevronRight size={13} />
-                                </button>
-                              </div>
-
-                            </div>
-
-                          </div>
-                        ))}
+                        {staffRole === 'scribe' ? (
+                          <StaffProfileSwitcher 
+                            profiles={[
+                              {
+                                name: '三更',
+                                englishName: 'Midnight',
+                                bio: '擅長營造深夜寂靜、爐火微光的深色重彩插畫。以細膩的明暗光衰與哥德式墨線，描繪在黑夜中閃爍的精靈與古老靈藥。平日喜愛在黎明到來前點燃琥珀色煤油燈，靜靜雕琢夢境中的破碎片段。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['深夜星光與暗部光影', '古老法典羊皮紙質感', '哥德幻象肖像彩繪'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '星曆與占星術研究'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '秘境中的草藥研磨'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '黃昏下的小屋別墅'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '深夜爐火微光手稿'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '深夜星光重彩肖像', price: '⦗ 15,000 Gil ⦘' },
+                                  { item: '古典植物誌羊皮研究細節線稿', price: '⦗ 6,000 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '小藍',
+                                englishName: 'Bleu',
+                                bio: '偏愛清冷而透明的靛藍色調，猶如古老冰川融化時的情感流動。擅長以輕靈的半透明水彩技法繪製植物花瓣、澄澈小溪與冒險者的溫柔眼眸。在其筆下，冰冷的乙太也能展現出水波般的感性。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['極地冰晶透明質感', '清晨露珠與微光渲染', '溫和舒緩肖像手繪'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '澄澈藍冰水華圖'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '寒霜玫瑰的微光'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '漫風雪觀星台夜景'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '半透明植物手帳'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '半透明水彩感植物肖像', price: '⦗ 12,000 Gil ⦘' },
+                                  { item: '精緻冰晶水彩單體速寫', price: '⦗ 5,000 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '阿琪',
+                                englishName: 'Aki',
+                                bio: '擁有秋季落葉般溫暖色調的拂曉繪師。其作品多帶有手造紙的粗糙紋理與古樸的金箔裝飾，常年在小屋的文獻庫協助古籍手繪重製。筆觸沈實，自帶一種午後暖陽照透塵埃的靜謐香氣。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['古典羊皮古文重塑', '秋實與落葉色調營造', '金箔手藝飾邊設計'],
+                                commissionStatus: 'queue',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '秋實拂曉的文獻重塑'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '羊皮手抄金色符號'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '落葉時光的茶寮一角'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '冒險行囊速寫彩頁'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '羊皮手抄金色修飾肖像', price: '⦗ 14,000 Gil ⦘' },
+                                  { item: '古典金箔植物手繪速寫', price: '⦗ 5,500 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '一口',
+                                englishName: 'One Bite',
+                                bio: '擅長描繪冒險茶寮中各種誘人甜點與熱氣騰騰的草藥茶飲。其畫風飽滿溫柔，色彩溫潤香甜，讓人彷彿能透過古老的羊皮紙，嗅到廚房剛出爐的脆皮鬆餅與炙烤肉排的濃郁香氣。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['溫暖系食物與靜物畫', '午後茶飲霧氣描摹', '幸福感隨身小插圖'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '熱烘鬆餅與香草薄荷茶'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '精靈蜂蜜果凍杯'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '暖意烤肉與香料果酒'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '茶寮甜點合輯隨筆'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '精緻全彩茶寮美饌插圖', price: '⦗ 8,000 Gil ⦘' },
+                                  { item: '手繪幸福感茶飲甜點隨筆', price: '⦗ 3,500 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '毛熊',
+                                englishName: 'Ursa',
+                                bio: '筆觸如同其名般厚實穩重，喜愛使用厚重油彩與炭棒描繪森林中高大的樹木、古老巨石與冒險者的旅伴。畫作帶著沉穩的泥土芬芳，給予觀者無比安心的林野氣息，是頑強歷史的沈默歌頌者。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['重油彩炭棒林木描繪', '古老巨石苔蘚質感', '寫實派野外地圖與馱獸'],
+                                commissionStatus: 'closed',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '黑衣森林深處的古木'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '覆苔巨石與以太流'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '冒險者的陸行鳥旅伴'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '林地庇護所概念稿'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '林野厚油彩場景巨繪', price: '⦗ 22,000 Gil ⦘' },
+                                  { item: '冒險者與忠誠馱獸立繪', price: '⦗ 16,000 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '鮮魚',
+                                englishName: 'Poisson',
+                                bio: '擅長用流暢如水、變幻莫測的藍紫色筆觸，描繪深海中的以太漩渦與發光生物。其畫作中常伴有流動的水汽、飛散的透明氣泡與波光粼粼的夢幻光效，猶如利姆薩·羅敏薩深海下的瑰麗奇境。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['海洋以太流動繪製', '深海發光蕈生存錄', '波光瀲灩水體刻畫'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '深海發光以太水汽'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '波光粼粼的潮池精靈'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '利姆薩羅敏薩浪花圖'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '水下乙太結晶速寫'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '斑斕深海極光肖像插畫', price: '⦗ 15,500 Gil ⦘' },
+                                  { item: '流動水汽與潮汐單色速寫', price: '⦗ 6,000 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '篁上',
+                                englishName: 'Takamura',
+                                bio: '來自遠東黃金鄉的傳統畫師，精通竹影、日本摺扇、金箔與細膩工筆。擅長將東洋古典重彩與小屋庭院的西方草藥完美的跨界結合，其線條勾勒流暢古雅，作品中透出超然脫俗的雅緻。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['東洋摺扇屏風細繪', '水墨竹石意境營造', '古典精靈使魔全彩'],
+                                commissionStatus: 'queue',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '東洋竹影水墨屏風'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '金箔仙鶴櫻花扇面'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '神選仙獸使魔圖'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '遠東異界神明插像'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '大和摺扇極彩古典肖像', price: '⦗ 18,000 Gil ⦘' },
+                                  { item: '細膩工筆水墨竹石寫意隨筆', price: '⦗ 7,500 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '阿樹',
+                                englishName: 'Arbor',
+                                bio: '隱居在小屋溫室一角的本草速寫員。其線稿剛勁有力，能在數分鐘內以單色鋼筆優雅勾勒出最複雜的草藥根莖與魔力結晶。他用樸實的筆尖向大自然致敬，是小屋中最受草藥學徒歡迎的導師。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['鋼筆本草綱目速寫', '草藥根莖局部解剖圖', '黑白線條版畫雕繪'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '格里達尼亞根莖解剖'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '鋼筆勾勒魔力結晶'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '古老草本根鬚版畫'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '極簡精靈露水速寫'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '黑白鋼筆剖析本草志圖錄(大)', price: '⦗ 11,000 Gil ⦘' },
+                                  { item: '本草根莖黑白速寫插卡', price: '⦗ 4,500 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: '厂丁',
+                                englishName: 'Handing',
+                                bio: '專注於小屋機械結構與以太管道透視繪製的理性畫師。其筆下充滿了完美的幾何線條、精密的發條零件與散發著幽光的魔力黃銅。對於透視學有著極近偏執的追求，認為齒輪的和諧即是藝術。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['魔力蒸氣活塞透視', '發條裝置結構拆解', '古典羊皮精確製圖'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '魔力飛輪機械結構'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '蒸汽以太管道透視'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '發條精靈機械肢分解'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '黃銅魔力齒輪製圖'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '發條裝置蒸汽龐克精細立繪', price: '⦗ 16,500 Gil ⦘' },
+                                  { item: '機械飛輪羊皮紙幾何製圖', price: '⦗ 8,000 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              },
+                              {
+                                name: 'CC',
+                                englishName: 'CC',
+                                bio: '充滿神祕感的符文與命理插畫師，僅在深夜光影曖昧時出沒。其筆底的塔羅牌面與星輪運行圖，線條交織如蛛網，色彩華麗中帶著一絲不祥與狂喜，隱藏著通往魔力深處的密碼，深不可測。',
+                                avatarUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800',
+                                specialties: ['古典符文星輪設計', '塔羅牌面神秘重塑', '以太法術陣幾何繪'],
+                                commissionStatus: 'open',
+                                portfolio: [
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+                                    title: '命運之輪塔羅牌重绘'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+                                    title: '星盤大以太軌跡運行'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800',
+                                    title: '深空召喚法陣圖騰'
+                                  },
+                                  {
+                                    url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+                                    title: '神秘盧恩符文雕印'
+                                  }
+                                ],
+                                priceList: [
+                                  { item: '占星塔羅神聖重塑插畫', price: '⦗ 17,500 Gil ⦘' },
+                                  { item: '以太法陣古典符文幾何手繪', price: '⦗ 7,500 Gil ⦘' }
+                                ],
+                                ongoing: []
+                              }
+                            ]} 
+                          />
+                        ) : (
+                          <WaiterProfileSwitcher />
+                        )}
                       </motion.div>
                     </AnimatePresence>
                   </div>
-
                 </motion.div>
               )}
 

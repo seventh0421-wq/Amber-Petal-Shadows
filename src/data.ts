@@ -3,8 +3,11 @@ export interface MenuItem {
   name: string;
   englishName: string;
   price: string;
-  category: 'tea' | 'confection' | 'elixir';
+  category: 'tea_delight' | 'conceptual_set';
   desc: string;
+  gameItemName?: string;
+  icon?: string;
+  subitems?: string[];
 }
 
 export interface ChronicleItem {
@@ -65,67 +68,73 @@ export const WINDOW_IMAGES = [
 export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'm1',
-    name: '琥珀之淚',
-    englishName: 'Tears of Amber',
-    price: '⦗ 400 Gil ⦘',
-    category: 'tea',
-    desc: '選用黑衣森林特產的甜楓樹汁凝露調和高山紅茶，茶湯呈現澄澈的琥珀色，入口帶有溫潤的煙燻焦糖香。'
+    name: '幻術皇的午後漫步',
+    englishName: 'Chamomile Tea',
+    price: '⦗ 20,000 Gil ⦘',
+    category: 'tea_delight',
+    desc: '「採集自黑衣森林的野生甘菊，帶有微甜的蘋果香氣，能撫平冒險者緊繃的元靈。」',
+    gameItemName: '甘菊茶',
+    icon: 'Coffee'
   },
   {
     id: 'm2',
-    name: '晨曦花影',
-    englishName: 'Dawn Petal Shadows',
-    price: '⦗ 450 Gil ⦘',
-    category: 'tea',
-    desc: '以薩雷安空運而來的薰衣草、洋甘菊為基底，佐以曬乾的星辰花瓣，帶給人極度放鬆的安神花香。'
+    name: '琥珀蜜林奶茶',
+    englishName: 'Masala Chai',
+    price: '⦗ 20,000 Gil ⦘',
+    category: 'tea_delight',
+    desc: '「加入近東辛香料與黑衣森林特產蜂蜜熬煮，色澤宛如店內的琥珀，溫潤而濃厚。」',
+    gameItemName: '馬薩拉奶茶',
+    icon: 'Coffee'
   },
   {
     id: 'm3',
-    name: '白銀鄉櫻落',
-    englishName: 'Shirogane Sakura Steep',
-    price: '⦗ 480 Gil ⦘',
-    category: 'tea',
-    desc: '遠東之國的醃漬櫻花辦隨熱氣舒展，湯色呈極淡微粉，微鹹中帶有甘甜的米蜜香氣，口感新穎。'
+    name: '盛開的藝術之花',
+    englishName: 'Turali Pineapple Ponzecake',
+    price: '⦗ 20,000 Gil ⦘',
+    category: 'tea_delight',
+    desc: '「使用來自遙遠新大陸的圖拉爾鳳梨，將金黃的陽光與濃郁果香封存於綿密的蛋糕中。這不只是一道甜點，更是創作者跨越海洋、在此盛開的靈感畫卷。」',
+    gameItemName: '圖拉爾鳳梨蛋糕',
+    icon: 'CakeSlice'
   },
   {
     id: 'm4',
-    name: '密林晚鐘',
-    englishName: 'Deepwood Vesper Chimes',
-    price: '⦗ 500 Gil ⦘',
-    category: 'tea',
-    desc: '厚實的烏龍烘焙茶，融入迷迭香與丁香碎屑，強烈的草本與木質香氣堆疊，彷彿林中迴盪的微雨晚鐘。'
+    name: '靈感時光脆餅',
+    englishName: 'Sykon Cookie',
+    price: '⦗ 20,000 Gil ⦘',
+    category: 'tea_delight',
+    desc: '「烘烤得恰到好處的無花果餅乾，果實的甘甜沉澱在酥脆的時光裡。就如同那些默默耕耘的原創夢想，不需張揚，卻在咬下的那一刻綻放出最深邃的靈感芬芳。」',
+    gameItemName: '無花果餅乾',
+    icon: 'Cookie'
   },
   {
     id: 'm5',
-    name: '花影水信玄餅',
-    englishName: 'Petal Infused Agar Jelly',
-    price: '⦗ 350 Gil ⦘',
-    category: 'confection',
-    desc: '剔透似水晶的球體中凝固著一整朵粉白櫻桃花，搭配自製的琥珀糖漿與研磨黃豆粉，如夢似幻。'
+    name: '健人套餐：來點蛋白質嗎？',
+    englishName: 'Protein Course Set',
+    price: '⦗ 50,000 Gil ⦘',
+    category: 'conceptual_set',
+    desc: '煙燻雞肉2份、犏牛肉排、根菜沙拉、莫爾斯',
+    icon: 'Dumbbell',
+    subitems: ['煙燻雞肉2份', '犏牛肉排', '根菜沙拉', '莫爾斯']
   },
   {
     id: 'm6',
-    name: '苔岩抹茶生乳酪',
-    englishName: 'Mossy Rock Matcha Cheesecake',
-    price: '⦗ 380 Gil ⦘',
-    category: 'confection',
-    desc: '重乳酪的濃郁中融入了微苦的極上抹茶，不規則的表面撒上翠綠粉末，仿真森林深處的濕潤青苔。'
+    name: '暈碳套餐：精緻碳水化合物的極致饗宴。',
+    englishName: 'Carb Heaven Course Set',
+    price: '⦗ 50,000 Gil ⦘',
+    category: 'conceptual_set',
+    desc: '帝王海膽奶油麵、糖煮水果果凍、馬薩拉奶茶',
+    icon: 'Moon',
+    subitems: ['帝王海膽奶油麵', '糖煮水果果凍', '馬薩拉奶茶']
   },
   {
     id: 'm7',
-    name: '精靈之羽迷迭鬆餅',
-    englishName: 'Sylphan Rosemary Scone',
-    price: '⦗ 320 Gil ⦘',
-    category: 'confection',
-    desc: '烤得金黃酥脆的松餅，混入現折的香草植物葉片，搭配野莓楓糖漿，散發森林特有的清爽氣息。'
-  },
-  {
-    id: 'm8',
-    name: '黑衣深處的解憂藥劑',
-    englishName: 'Gridanian Soothing Draught',
-    price: '⦗ 520 Gil ⦘',
-    category: 'elixir',
-    desc: '盛放在精緻琥珀玻璃瓶中的草本蘇打。薄荷、青檸、接骨木花與微量精製蜂蜜，薄霧感氣泡在舌尖跳躍。'
+    name: '哈哈套餐：隨餐附贈當日冷笑話。',
+    englishName: 'Joyous Joke Course Set',
+    price: '⦗ 50,000 Gil ⦘',
+    category: 'conceptual_set',
+    desc: '蘆薈水果凍、羅蘭莓刨冰',
+    icon: 'Snowflake',
+    subitems: ['蘆薈水果凍', '羅蘭莓刨冰']
   }
 ];
 
@@ -242,38 +251,44 @@ export const FAQS: FaqItem[] = [
 export const PETAL_PHOTOS = [
   {
     url: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=800',
-    caption: '🌲 密林沉睡中的小屋一角 (Quiet Woods)',
+    caption: '密林沉睡中的小屋一角 (Quiet Woods)',
     aspect: 'aspect-[3/4]',
-    type: 'polaroid'
+    type: 'polaroid',
+    iconKey: 'Sprout'
   },
   {
     url: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=800',
-    caption: '☕ 注入乙太的微溫花草茶 (Infusing Eather)',
+    caption: '注入乙太的微溫花草茶 (Infusing Eather)',
     aspect: 'aspect-square',
-    type: 'polaroid'
+    type: 'polaroid',
+    iconKey: 'Coffee'
   },
   {
     url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=800',
-    caption: '🌫️ 晨煙裊裊的黑衣深處 (Deepwood Haze)',
+    caption: '晨煙裊裊的黑衣深處 (Deepwood Haze)',
     aspect: 'aspect-[4/5]',
-    type: 'polaroid'
+    type: 'polaroid',
+    iconKey: 'Compass'
   },
   {
     url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=800',
-    caption: '📜 草藥師的風乾筆記本 (Dried Leaf Studies)',
+    caption: '草藥師的風乾筆記本 (Dried Leaf Studies)',
     aspect: 'aspect-[3/2]',
-    type: 'full'
+    type: 'full',
+    iconKey: 'BookOpen'
   },
   {
     url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=800',
-    caption: '✍️ 夜半燃燭的執筆手札 (深夜的精靈微光)',
+    caption: '夜半燃燭的執筆手札 (深夜的精靈微光)',
     aspect: 'aspect-square',
-    type: 'polaroid'
+    type: 'polaroid',
+    iconKey: 'Feather'
   },
   {
     url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
-    caption: '✨ 掌燈人點亮的黃銅星空星座燈 (Astral Constellations)',
+    caption: '掌燈人點亮的黃銅星空星座燈 (Astral Constellations)',
     aspect: 'aspect-[4/3]',
-    type: 'full'
+    type: 'full',
+    iconKey: 'Sparkles'
   }
 ];
