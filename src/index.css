@@ -1,16 +1,43 @@
-@import "tailwindcss";
 @import url('https://v1.emfont.com/client?id=GenWanMinTW');
 @import url('https://v1.emfont.com/client?id=MaokenXiangCuiKeSong');
 @import url('https://v1.emfont.com/client?id=GenRyuMinTW');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=New+Tegomin&family=Meddon&display=swap');
+@import "tailwindcss";
 
 @theme {
   --font-serif: "GenRyuMinTW", "GenWanMinTW", "Noto Serif TC", "Playfair Display", Georgia, serif;
   --font-kesong: "GenRyuMinTW", "MaokenXiangCuiKeSong", "猫啃网香萃刻宋", "XiangCuiKeSong", "GenWanMinTW", serif;
   --font-sans: "Noto Sans TC", "Inter", sans-serif;
+  --font-tegomin: "New Tegomin", "GenRyuMinTW", "GenWanMinTW", serif;
+  --font-meddon: "Meddon", cursive;
   --color-cream: #FDFAF6;
   --color-forest: #0B2415;
   --color-amber-gold: #C29355;
+}
+
+/* Custom CSS fallback class for New Tegomin and Meddon fonts */
+.font-tegomin {
+  font-family: "New Tegomin", "GenRyuMinTW", "GenWanMinTW", serif !important;
+}
+
+.font-meddon {
+  font-family: "Meddon", cursive !important;
+}
+
+/* 
+ * 16px Inner Content Text styling 
+ * Targets main body text paragraphs and content within the <main> element,
+ * while leaving navigation headers and standard footers intact.
+ */
+main p,
+main .text-xs:not(span):not(button):not(a),
+main .text-sm:not(span):not(button):not(a),
+main .text-\[11px\]:not(span),
+main .text-\[12px\]:not(span),
+main .faq-answer,
+main div.font-light:not(span) {
+  font-size: 16px !important;
+  line-height: 1.85 !important;
 }
 
 /* Custom scrollbars for the window horizontal scroll */

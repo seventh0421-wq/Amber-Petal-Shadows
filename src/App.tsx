@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Compass, 
@@ -23,6 +23,7 @@ import {
   Clock,
   ExternalLink,
   ChevronRight,
+  ChevronLeft,
   Maximize2
 } from 'lucide-react';
 
@@ -80,6 +81,60 @@ export default function App() {
   const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null); // For Polaroid image lightbox modal
   
   const windowScrollRef = useRef<HTMLDivElement>(null);
+
+  // Mouse drag scrolling functionality for Window-View section (Desktop)
+  const windowDragIsDown = useRef(false);
+  const windowDragStartX = useRef(0);
+  const windowDragScrollLeft = useRef(0);
+
+  const handleWindowMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    windowDragIsDown.current = true;
+    if (windowScrollRef.current) {
+      windowScrollRef.current.classList.add('cursor-grabbing');
+      windowDragStartX.current = e.pageX - windowScrollRef.current.offsetLeft;
+      windowDragScrollLeft.current = windowScrollRef.current.scrollLeft;
+    }
+  };
+
+  const handleWindowMouseLeave = () => {
+    windowDragIsDown.current = false;
+    if (windowScrollRef.current) {
+      windowScrollRef.current.classList.remove('cursor-grabbing');
+    }
+  };
+
+  const handleWindowMouseUp = () => {
+    windowDragIsDown.current = false;
+    if (windowScrollRef.current) {
+      windowScrollRef.current.classList.remove('cursor-grabbing');
+    }
+  };
+
+  const handleWindowMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!windowDragIsDown.current || !windowScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - windowScrollRef.current.offsetLeft;
+    const walk = (x - windowDragStartX.current) * 1.5; // Scroll speed multiplier
+    windowScrollRef.current.scrollLeft = windowDragScrollLeft.current - walk;
+  };
+
+  const scrollPrevWindow = () => {
+    if (windowScrollRef.current) {
+      windowScrollRef.current.scrollBy({
+        left: -350,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollNextWindow = () => {
+    if (windowScrollRef.current) {
+      windowScrollRef.current.scrollBy({
+        left: 350,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const handleEnter = () => {
     setEntered(true);
@@ -146,7 +201,7 @@ export default function App() {
               {/* Middle quote split (left side) */}
               <div className="z-10 flex flex-col justify-center items-end h-full text-right max-w-xs ml-auto pr-4 select-none">
                 <p className="text-sm md:text-base font-serif tracking-[0.4em] text-[#FDFAF6]/80 leading-loose">
-                  推開那扇門
+                  時間流逝
                 </p>
                 <div className="w-8 h-[1px] bg-[#C29355]/30 mt-4" />
               </div>
@@ -175,20 +230,20 @@ export default function App() {
                   PETAL SHADOWS
                 </span>
                 <span className="font-mono text-[9px] tracking-widest text-[#FDFAF6]/40 block mt-1">
-                  MANA - ODIN
+                  TC - Garuda
                 </span>
               </div>
 
               {/* Middle quote split (right side) */}
               <div className="z-10 flex flex-col justify-center items-start h-full text-left max-w-xs pl-4 select-none">
                 <p className="text-sm md:text-base font-serif tracking-[0.4em] text-[#FDFAF6]/80 leading-loose">
-                  密林深處有光
+                  但落入琥珀的夢，從不褪色。
                 </p>
                 <div className="w-8 h-[1px] bg-[#C29355]/30 mt-4" />
               </div>
 
               <div className="z-10 tracking-[0.2em] font-mono text-xs text-right text-[#FDFAF6]/30 leading-loose mt-auto w-full">
-                ODIN SERVER RP ATELIER
+                GARUDA SERVER RP ATELIER
               </div>
             </motion.div>
 
@@ -212,9 +267,7 @@ export default function App() {
                   </svg>
                 </div>
 
-                <p className="text-xs tracking-[0.3em] font-mono text-gray-400 mb-8 uppercase">
-                  FOREST CABIN PORTAL
-                </p>
+
 
                 {/* Enter Button */}
                 <button
@@ -273,21 +326,21 @@ export default function App() {
                       )}
 
                       <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                        <div className="flex items-center space-x-1.5">
+                        <div className="flex items-center space-x-2">
                           <Icon 
-                            size={13} 
+                            size={16} 
                             className={`transition-colors duration-300 ${
                               isTarget ? 'text-[#C29355]' : 'text-gray-400'
                             }`}
                           />
-                          <span className={`text-xs font-bold tracking-[0.2em] transition-colors duration-300 ${
+                          <span className={`text-sm md:text-xl font-bold tracking-[0.15em] transition-colors duration-300 ${
                             isTarget ? 'text-[#FDFAF6]' : 'text-gray-800'
                           }`}>
                             {tab.label}
                           </span>
                         </div>
                         {/* English subtitle */}
-                        <span className={`text-[8px] font-mono tracking-widest mt-1 transition-colors duration-300 ${
+                        <span className={`text-[9px] md:text-xs font-mono tracking-widest mt-1.5 transition-colors duration-300 ${
                           isTarget ? 'text-[#C29355]/90' : 'text-gray-400'
                         }`}>
                           {tab.enLabel}
@@ -302,7 +355,7 @@ export default function App() {
               <div className="md:absolute md:right-12 flex items-center space-x-4">
                 <span className="hidden lg:inline-flex px-3 py-1 bg-emerald-950/5 text-emerald-900 font-mono text-[10px] tracking-widest rounded-none uppercase items-center space-x-1 border border-emerald-900/10">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse mr-1" />
-                  <span>Mana - Odin</span>
+                  <span>TC - Garuda</span>
                 </span>
                 
                 {/* Mobile Menu Icon */}
@@ -355,7 +408,7 @@ export default function App() {
                       );
                     })}
                     <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-[11px] font-mono tracking-wider text-gray-400">
-                      <span>Mana / Odin Server RP Shop</span>
+                      <span>TC / Garuda Server RP Shop</span>
                       <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded">OPEN</span>
                     </div>
                   </div>
@@ -370,10 +423,10 @@ export default function App() {
               {activeTab === 'home' && (
                 <motion.div
                   key="home-tab"
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
                   className="space-y-24"
                 >
                   
@@ -385,23 +438,23 @@ export default function App() {
                       <div className="relative mb-16 select-none pointer-events-none">
                         {/* Chinese Main Heading - Beautiful and massive (200px equivalent on large screens) */}
                         <h1 
-                          className="HuiwenMincho text-gray-950 tracking-[0.05em] leading-none whitespace-nowrap break-keep select-none opacity-95 transition-all duration-300 block"
+                          className="font-tegomin text-gray-950 tracking-[0.05em] leading-none whitespace-nowrap break-keep select-none opacity-95 transition-all duration-300 block"
                           style={{ fontSize: 'clamp(50px, 15vw, 200px)' }}
                         >
                           琥珀與花影
                         </h1>
                         
-                        {/* English Sub/Main Heading - Elegant, classy serif placed directly underneath */}
+                        {/* English Sub/Main Heading - Elegant, classy custom handwriting font placed directly underneath */}
                         <h2 
-                          className="font-serif font-extrabold text-[#C29355] tracking-[0.1em] leading-none mt-6 whitespace-nowrap"
-                          style={{ fontSize: 'clamp(28px, 6vw, 76px)' }}
+                          className="font-meddon text-[#C29355] tracking-[0.05em] leading-[1.3] mt-8 whitespace-nowrap text-center opacity-80 block w-full"
+                          style={{ fontSize: 'clamp(20px, 4vw, 52px)' }}
                         >
                           Amber & Petal Shadows
                         </h2>
                       </div>
 
                       {/* Content Row: Just the elegant centered NEWS block */}
-                      <div className="max-w-3xl mt-8">
+                      <div className="w-full mt-8">
                         <div className="p-6 md:p-8 bg-[#FDFAF6] border border-gray-200/50 relative shadow-[0_8px_24px_rgba(11,36,21,0.01)] w-full flex flex-col justify-between">
                           {/* Decorative lines like in Plan.Do.See */}
                           <div className="absolute top-2 left-2 right-2 bottom-2 border border-gray-200/25 pointer-events-none" />
@@ -411,13 +464,13 @@ export default function App() {
                               NEWS 誌上公告
                             </span>
                             
-                            <div className="flex flex-col gap-4 text-xs font-serif leading-relaxed">
+                            <div className="flex flex-col gap-4 text-[16px] font-serif leading-relaxed">
                               <div className="flex items-start gap-4">
-                                <span className="text-gray-400 font-mono tracking-wider shrink-0 min-w-[75px] pt-0.5">
+                                <span className="text-gray-400 font-mono text-[16px] tracking-wider shrink-0 min-w-[100px] pt-0.5">
                                   2026.06.11
                                 </span>
-                                <span className="text-gray-600 font-kesong text-[11px] leading-relaxed block">
-                                  【同人常設展示募集】小屋常態徵集玩家原創手稿、植物誌繪圖，歡迎冒險者前往「常見問答」查詢投稿規章並與我們分享。
+                                <span className="text-gray-600 font-kesong text-[16px] leading-relaxed block">
+                                  【建置中】請稍後－－「琥珀與花影」即將與您見面！
                                 </span>
                               </div>
                             </div>
@@ -430,7 +483,7 @@ export default function App() {
                   {/* Part 1: 序章絮語 (No Image, centered giant serif text display) */}
                   <section id="prologue-section" className="py-12 md:py-24 text-center max-w-3xl mx-auto flex flex-col items-center">
                     <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355] mb-6">
-                      PROLOGUE ・ 序章絮語
+                      CH . 01 PROLOGUE ・ 序章絮語
                     </span>
                     <h2 className="font-serif text-lg md:text-xl text-gray-900 leading-relaxed md:leading-loose text-center font-normal px-4 max-w-3xl mx-auto whitespace-pre-line">
                       傳聞在格里達尼亞的密林深處，有一座隱密而溫馨的小屋。這裡不只提供特製的飲品與甜點，更默默收集著來自艾歐澤亞各地的神秘圖卷。{"\n"}{"\n"}
@@ -446,7 +499,7 @@ export default function App() {
                     {/* Left: Big photo (Col Span 8) */}
                     <div className="col-span-12 lg:col-span-8 group relative overflow-hidden bg-gray-100">
                       <div className="absolute top-0 left-0 bg-[#0B2415] text-[#FDFAF6] font-serif text-xs tracking-widest px-6 py-3 z-10">
-                        Ch. 01 / HISTORIC ACCENTS
+                        CH . 02 遺落林間的小屋
                       </div>
                       <div className="overflow-hidden aspect-[16/10]">
                         <img 
@@ -459,14 +512,14 @@ export default function App() {
                       {/* Subtle image description */}
                       <div className="mt-3 flex justify-between items-center text-[11px] text-gray-400 font-mono tracking-widest uppercase">
                         <span>[ GRIDANIAN WOODEN ARCHITECTURE ]</span>
-                        <span>01 / 04</span>
+                        <span>02 / 04</span>
                       </div>
                     </div>
 
                     {/* Right: Narrow editorial paragraph (Col Span 4) */}
                     <div className="col-span-12 lg:col-span-4 flex flex-col justify-center space-y-6 lg:pl-4">
-                      <span className="font-serif italic text-4xl text-[#C29355] font-light tracking-wide leading-none select-none">
-                        Ch. 01
+                      <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355] select-none">
+                        CH . 02 遺落林間的小屋
                       </span>
                       <h3 className="font-serif text-2xl text-gray-900 tracking-wider font-semibold">
                         遺落林間的草藥工坊
@@ -502,27 +555,50 @@ export default function App() {
                     <div className="flex flex-col md:flex-row md:items-end md:justify-between pb-4 border-b border-gray-100">
                       <div>
                         <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355]">
-                          THE WINDOW VIEWS
+                          CH . 03 THE WINDOW VIEWS
                         </span>
                         <h3 className="font-serif text-2xl text-gray-900 tracking-wider mt-1 font-semibold">
                           窗景一隅・小屋特寫
                         </h3>
                       </div>
-                      <p className="text-gray-400 font-mono text-[11px] tracking-widest uppercase mt-2 md:mt-0">
-                        [ drag horizontally to discover / 橫向滑動閱覽 ]
-                      </p>
+                      
+                      <div className="flex items-center space-x-6 mt-4 md:mt-0 select-none">
+                        <p className="text-gray-400 font-mono text-[11px] tracking-widest uppercase hidden sm:block">
+                          [ drag horizontally or use arrows / 左右拖移或點擊箭頭 ]
+                        </p>
+                        <div className="flex items-center space-x-2">
+                          <button 
+                            onClick={scrollPrevWindow}
+                            className="p-2 border border-gray-200 text-gray-500 hover:text-gray-950 hover:border-gray-950 hover:bg-gray-50 transition-all duration-300 rounded-none cursor-pointer"
+                            aria-label="Previous view"
+                          >
+                            <ChevronLeft size={16} />
+                          </button>
+                          <button 
+                            onClick={scrollNextWindow}
+                            className="p-2 border border-gray-200 text-gray-500 hover:text-gray-950 hover:border-gray-950 hover:bg-gray-50 transition-all duration-300 rounded-none cursor-pointer"
+                            aria-label="Next view"
+                          >
+                            <ChevronRight size={16} />
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Drag Container */}
                     <div 
                       ref={windowScrollRef}
-                      className="overflow-x-auto no-scrollbar flex space-x-10 pb-6 -mx-6 px-6 snap-x snap-mandatory"
+                      onMouseDown={handleWindowMouseDown}
+                      onMouseLeave={handleWindowMouseLeave}
+                      onMouseUp={handleWindowMouseUp}
+                      onMouseMove={handleWindowMouseMove}
+                      className="overflow-x-auto no-scrollbar flex space-x-10 pb-6 -mx-6 px-6 snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none scroll-smooth"
                     >
                       {WINDOW_IMAGES.map((img, i) => (
                         <div 
                           key={i}
                           onClick={() => setActiveWindowImage(i)}
-                          className="min-w-[280px] sm:min-w-[400px] max-w-[450px] snap-center flex-shrink-0 cursor-pointer text-left focus:outline-none"
+                          className="min-w-[280px] sm:min-w-[400px] max-w-[450px] snap-center flex-shrink-0 cursor-pointer text-left focus:outline-none select-none"
                         >
                           <div className={`overflow-hidden aspect-[4/3] bg-gray-50 transition-all duration-500 mb-4 ${
                             activeWindowImage === i ? 'ring-1 ring-[#C29355]/30 shadow-md' : 'opacity-85 hover:opacity-100 shadow-none'
@@ -531,11 +607,12 @@ export default function App() {
                               src={img.url} 
                               alt={img.title} 
                               referrerPolicy="no-referrer"
-                              className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
+                              draggable="false"
+                              className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 pointer-events-none select-none"
                             />
                           </div>
                           
-                          <div className="px-1 flex justify-between items-start">
+                          <div className="px-1 flex justify-between items-start select-none">
                             <div>
                               <h4 className="font-serif text-sm text-gray-900 tracking-wide font-medium">
                                 {img.title}
@@ -559,7 +636,7 @@ export default function App() {
                   <section id="irrigation-section" className="bg-[#FDFAF6] border-t border-b border-[#C29355]/10 py-16 md:py-24">
                     <div className="max-w-4xl mx-auto text-center space-y-12">
                       <span className="text-[10px] uppercase font-mono tracking-[0.3em] text-[#C29355]">
-                        OUR IRRIGATION APPROACH
+                        CH . 04 OUR IRRIGATION APPROACH
                       </span>
                       
                       <h3 className="font-serif text-3xl text-gray-900 tracking-widest font-normal">
@@ -603,10 +680,10 @@ export default function App() {
               {activeTab === 'services' && (
                 <motion.div
                   key="services-tab"
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
                   className="space-y-24"
                 >
                   
@@ -816,10 +893,10 @@ export default function App() {
               {activeTab === 'staff' && (
                 <motion.div
                   key="staff-tab"
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
                   className="space-y-16"
                 >
                   
@@ -987,10 +1064,10 @@ export default function App() {
               {activeTab === 'qa' && (
                 <motion.div
                   key="qa-tab"
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
                   className="space-y-16 max-w-3xl mx-auto"
                 >
                   
@@ -1015,9 +1092,9 @@ export default function App() {
                     
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 z-10 relative">
                       <div className="space-y-1">
-                        <span className="text-[10px] text-[#C29355] font-mono tracking-widest uppercase block">[ FFXIV Mana DC Location ]</span>
+                        <span className="text-[10px] text-[#C29355] font-mono tracking-widest uppercase block">[ FFXIV TC Location ]</span>
                         <h3 className="font-serif text-lg font-bold tracking-wide">
-                          Mana 數據中心 / Odin（奧丁）伺服器
+                          TC 數據中心 / Garuda（迦樓羅）伺服器
                         </h3>
                         <p className="text-[#FDFAF6]/60 text-xs font-light">
                           黑衣森林 薰衣草苗圃 (Lavender Beds) 第 28 區 46 號
@@ -1099,15 +1176,14 @@ export default function App() {
               {/* Box 1: Left Brand info */}
               <div className="space-y-4">
                 <span className="font-serif text-xs tracking-widest text-[#C29355] font-semibold uppercase">[ 屋脊銘牌 ]</span>
-                <h4 className="HuiwenMincho text-lg text-gray-900 tracking-widest leading-none mt-2">
+                <h4 className="font-tegomin text-lg text-gray-900 tracking-widest leading-none mt-2">
                   琥珀與花影
                 </h4>
                 <p className="font-serif text-[10px] tracking-widest text-gray-400 uppercase">
                   Amber & Petal Shadows
                 </p>
                 <p className="text-gray-500 text-xs leading-relaxed max-w-xs font-light">
-                  一家致力於艾歐澤亞（Eorzea）植物學研究與草本美學 Roleplay 交流的小屋沙龍。
-                  我們在黑衣森林漫漫拂曉的露水與琥珀微光中靜候君來。
+                  我們以調和花影與露水的暖茶，在時光聚合的溫柔微光中，守護您落入琥珀的夢境。
                 </p>
               </div>
 
@@ -1115,7 +1191,7 @@ export default function App() {
               <div className="space-y-4">
                 <span className="font-serif text-xs tracking-widest text-[#C29355] font-semibold uppercase">[ 交通與宿地 ]</span>
                 <div className="pt-2 space-y-2 text-xs text-gray-500 leading-relaxed font-light">
-                  <p className="font-semibold text-gray-800">Mana DC / Odin Server</p>
+                  <p className="font-semibold text-gray-800">TC / Garuda Server</p>
                   <p>Lavender Beds — 第 28 區 46 號（薰衣草苗圃）</p>
                   <p>主要開放時段：每週五與週六 21:00 ~ 23:00</p>
                   <p className="text-[11px] text-gray-400 italic">※ 非開放日歡迎進行無聲探訪拍照</p>
@@ -1124,13 +1200,15 @@ export default function App() {
 
               {/* Box 3: Social & disclaimer disclaimer */}
               <div className="space-y-4">
-                <span className="font-serif text-xs tracking-widest text-[#C29355] font-semibold uppercase">[ 旅人須知 ]</span>
+                <span className="font-serif text-xs tracking-widest text-[#C29355] font-semibold uppercase">[ 免責聲明 ]</span>
                 <div className="text-xs text-gray-500 leading-relaxed space-y-2 font-light">
                   <p>
-                    本空間為 FINAL FANTASY XIV 的同人二創虛擬角色扮演與創作社群網站，
-                    所有文案、世界觀背景皆基於遊戲內的植物學與風土人文設定。
+                    本空間為 FINAL FANTASY XIV 的同人非官方角色扮演與創作社群網站。所有故事背景、世界觀與虛擬歷史設定皆基於遊戲內之地方風土人文進行二次創作，與官方機關、真實團體、人物或現實事件無涉。
                   </p>
-                  <p className="text-[10px] text-gray-400">
+                  <p>
+                    本站所引用或提及之遊戲原始素材、名詞與美術設定，其智慧財產權與商標等權利均係原開發商及 SQUARE ENIX 所有。本空間不涉及任何商業盈利行為，僅供同好社群交流、角色扮演與創作分享之用。
+                  </p>
+                  <p className="text-[10px] text-gray-400 pt-1">
                     © 2010 - 2026 SQUARE ENIX CO., LTD. All Rights Reserved.
                   </p>
                 </div>
